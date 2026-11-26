@@ -1,23 +1,33 @@
-import axios from 'axios';
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 
+interface Repo {
+  name: string
+  stars: number
+  forks: number
+}
+
 function App() {
-  const [status, setStatus] = useState('loading')
+  const [repo, setRepo] = useState<Repo | null>(null)
 
   useEffect(() => {
     axios
-      .get('http://localhost:3001/api/health')
+      .get('http://localhost:3001/api/github/repo')
       .then(response => {
-        setStatus(response.data.status)
+        setRepo(response.data)
       })
   }, [])
 
-  
+  if (!repo) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div>
       <h1>DevOps Dashboard</h1>
-      <p>Backend status: {status}</p>
+      <p>Name: {repo.name}</p>
+      <p>Stars: {repo.stars}</p>
+      <p>Forks: {repo.forks}</p>
     </div>
   )
 }

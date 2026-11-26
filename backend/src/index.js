@@ -5,8 +5,12 @@ const app = express()
 
 app.use(cors())
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' })
+app.get('/api/github/repo', async (req, res) => {
+  res.json({  
+    name: 'devops-dashbord',
+    stars: 0,
+    forks: 0
+  })
 })
 
 const PORT = 3001
