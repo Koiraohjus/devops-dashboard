@@ -41,6 +41,13 @@ app.get('/api/github/actions', async (req, res) => {
 
   const data = await response.json()
 
+  if (data.workflow_runs.length === 0) {
+    return res.json({
+      status: 'no workflows',
+      conclusion: 'none'
+    })
+  }
+  
   const latestRun = data.workflow_runs[0]
 
   res.json({
