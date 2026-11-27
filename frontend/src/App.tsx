@@ -8,13 +8,20 @@ interface Repo {
 }
 
 interface Commit {
+  sha: string
   message: string
   author: string
+}
+
+interface Workflow {
+  status: string
+  conclusion: string
 }
 
 function App() {
   const [repo, setRepo] = useState<Repo | null>(null)
   const [commits, setCommits] = useState<Commit[]>([])
+  const [workflow, setWorkflow] = useState<Workflow | null>(null)
 
   useEffect(() => {
     axios
@@ -26,6 +33,11 @@ function App() {
       .get('http://localhost:3001/api/github/commits')
       .then(response => {
         setCommits(response.data)
+      })
+    axios
+      .get('http://localhost:3001/api/github/actions')
+      .then(response => {
+        setWorkflow(response.data)
       })
   }, [])
 
@@ -42,11 +54,18 @@ function App() {
       <p>Forks: {repo.forks}</p>
       <h2>Recent comments</h2>
      {commits.map(commit => (
-      <div key={commit.message}>
+      <div key={commit.sha}>
         <p>{commit.message}</p>
         <p>Author: {commit.author}</p>
       </div>
       ))}
+      <h2>Latest build</h2>
+      {workflow && (
+        <div>
+          <p>status: {workflow.status}</p>
+          <p>conclusion: {workflow.conclusion}</p>
+        </div>
+      )}
     </div>
   )
 }

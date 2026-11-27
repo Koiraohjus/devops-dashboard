@@ -27,6 +27,7 @@ app.get('/api/github/commits', async (req, res) => {
   const data = await response.json()
 
   const commits = data.slice(0, 5).map(commit => ({
+    sha: commit.sha,
     message: commit.commit.message,
     author: commit.commit.author.name
   }))
@@ -47,7 +48,7 @@ app.get('/api/github/actions', async (req, res) => {
       conclusion: 'none'
     })
   }
-  
+
   const latestRun = data.workflow_runs[0]
 
   res.json({
